@@ -36,7 +36,7 @@ namespace SignalR.Api.Controllers
             });
             return Ok("Category has been added successfully.");
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
             var value = _categoryService.TGetById(id);
