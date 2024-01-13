@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SignalR.WebUI.Controllers
+namespace SignalR.WebUI.Controllers;
+
+public class AdminLayoutController : Controller
 {
-    public class AdminLayoutController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

@@ -1,4 +1,4 @@
-﻿@model List<SignalR.WebUI.Dtos.CategoryDtos.ResultCategoryDto>
+﻿@model List<ResultCategoryDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -40,18 +40,14 @@
 										<td><a href="/Category/UpdateCategory/@item.CategoryId" class="btn btn-outline-success">Update</a></td>
 
 									</tr>
-
 								}
-	
+
 							</tbody>
 						</table>
 						<a href="/Category/CreateCategory" class="btn btn-outline-primary">New Category</a>
 					</div>
 				</div>
-
-
 			</div>
-
 		</div>
 	</div>
 </div>

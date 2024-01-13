@@ -34,11 +34,11 @@ namespace SignalR.Api.Controllers
             {
                Icon = createSocialMediaDto.Icon,
                Title = createSocialMediaDto.Title,
-               Url = createSocialMediaDto.Url
+               Url = createSocialMediaDto.Url,
             });
             return Ok("Social Media has been added successfully.");
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteSocialMedia(int id)
         {
             var value = _socialMediaService.TGetById(id);
@@ -46,7 +46,7 @@ namespace SignalR.Api.Controllers
             return Ok("Social Media has been deleted successfully.");
         }
 
-        [HttpGet("GetSocialMedia")]
+        [HttpGet("{id}")]
         public IActionResult GetSocialMedia(int id)
         {
             var value = _mapper.Map<GetSocialMediaDto>(_socialMediaService.TGetById(id));

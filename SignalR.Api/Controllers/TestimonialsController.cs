@@ -40,7 +40,7 @@ namespace SignalR.Api.Controllers
             });
             return Ok("Testimonial has been added successfully.");
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteTestimonial(int id)
         {
             var value = _testimonialService.TGetById(id);
@@ -48,7 +48,7 @@ namespace SignalR.Api.Controllers
             return Ok("Testimonial has been deleted successfully.");
         }
 
-        [HttpGet("GetTestimonial")]
+        [HttpGet("{id}")]
         public IActionResult GetTestimonial(int id)
         {
             var value = _mapper.Map<GetTestimonialDto>(_testimonialService.TGetById(id));
@@ -57,14 +57,14 @@ namespace SignalR.Api.Controllers
         [HttpPut]
         public IActionResult UpdateTestimonial(UpdateTestimonialDto testimonialDto)
         {
-            
             _testimonialService.TUpdate(new Testimonial()
             {
                 Comment = testimonialDto.Comment,
                 ImageUrl = testimonialDto.ImageUrl,
                 Name = testimonialDto.Name,
                 Status = testimonialDto.Status,
-                Title = testimonialDto.Title
+                Title = testimonialDto.Title,
+                TestimonialId = testimonialDto.TestimonialId
 
             });
             return Ok("Testimonial has been updated successfully.");

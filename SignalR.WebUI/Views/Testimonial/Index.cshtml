@@ -1,0 +1,51 @@
+﻿@model List<ResultTestimonialDto>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/AdminLayout/Index.cshtml";
+	int count;
+}
+<div class="content">
+	<div class="container-fluid">
+		<h4 class="page-title">Testimonial Operations</h4>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header">
+						<div class="card-title">Testimonial List</div>
+					</div>
+					<div class="card-body">
+						<div class="card-sub">
+							You can take action regarding customer comments below..
+						</div>
+						<table class="table mt-3">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">First and Surname</th>
+									<th scope="col">Status</th>
+									<th scope="col">Delete</th>
+									<th scope="col">Update</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td>@item.TestimonialId</td>
+										<td>@item.Name</td>
+										<td>@item.Status</td>
+										<td><a href="/Testimonial/DeleteTestimonial/@item.TestimonialId" class="btn btn-outline-danger">Delete</a></td>
+										<td><a href="/Testimonial/UpdateTestimonial/@item.TestimonialId" class="btn btn-outline-success">Update</a></td>
+									</tr>
+								}
+							</tbody>
+						</table>
+						<a href="/Testimonial/CreateTestimonial" class="btn btn-outline-primary">New Testimonial</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

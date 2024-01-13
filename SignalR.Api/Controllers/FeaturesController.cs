@@ -12,8 +12,8 @@ namespace SignalR.Api.Controllers
     [ApiController]
     public class FeaturesController : ControllerBase
     {
-      private readonly IFeatureService _featureService;
-      private readonly IMapper _mapper;
+        private readonly IFeatureService _featureService;
+        private readonly IMapper _mapper;
 
         public FeaturesController(IFeatureService featureService, IMapper mapper)
         {
@@ -21,14 +21,14 @@ namespace SignalR.Api.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult FeatureList() 
+        public IActionResult FeatureList()
         {
             var values = _mapper.Map<List<ResultFeatureDto>>(_featureService.TGetAll());
-            return Ok(values);   
+            return Ok(values);
 
         }
         [HttpPost]
-        public IActionResult CreateFeature(CreateFeatureDto createFeatureDto) 
+        public IActionResult CreateFeature(CreateFeatureDto createFeatureDto)
         {
             _featureService.TAdd(new Feature()
             {
@@ -42,14 +42,14 @@ namespace SignalR.Api.Controllers
             });
             return Ok("Feature has been created successfully.");
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteFeature(int id)
         {
             var value = _featureService.TGetById(id);
             _featureService.TDelete(value);
             return Ok("Feature has been deleted successfully.");
         }
-        [HttpGet("GetFeature")]
+        [HttpGet("{id}")]
         public IActionResult GetFeature(int id)
         {
             var value = _featureService.TGetById(id);

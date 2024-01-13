@@ -1,19 +1,109 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using SignalR.WebUI.Dtos.CategoryDtos;
+using SignalR.WebUI.Dtos.ProductDtos;
+using System.Text;
 
-namespace SignalR.WebUI.Controllers
+namespace SignalR.WebUI.Controllers;
+public class ProductController : Controller
 {
-    public class ProductController : Controller
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public ProductController(IHttpClientFactory httpClientFactory)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        public ProductController(IHttpClientFactory httpClientFactory)
+    public async Task<IActionResult> Index()
+    {
+        var client = _httpClientFactory.CreateClient();
+        var responseMessage = await client.GetAsync("https://localhost:7088/api/Products/ProductListWithCategory");
+        if (responseMessage.IsSuccessStatusCode)
         {
-            _httpClientFactory = httpClientFactory;
-        }
+            var jsonData = await responseMessage.Content.ReadAsStringAsync();
+            var values = JsonConvert.DeserializeObject<List<ResultProductDto>>(jsonData);
+            return View(values);
 
-        public IActionResult Index()
-        {
-            return View();
         }
+        return View();
+    }
+    [HttpGet]
+    public async Task<IActionResult> CreateProduct()
+    {
+        var client = _httpClientFactory.CreateClient();
+        var responseMessage = await client.GetAsync("https://localhost:7088/api/Categories");
+        var jsonData = await responseMessage.Content.ReadAsStringAsync();
+        var values = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData);
+        List<SelectListItem> valuesTwo = (from x in values
+                                          select new SelectListItem
+                                          {
+                                              Text = x.CategoryName,
+                                              Value = x.CategoryId.ToString()
+                                          }).ToList();
+        ViewBag.v = valuesTwo;
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
+    {
+        createProductDto.ProductsStatus = true;
+        var client = _httpClientFactory.CreateClient();
+        var jsonData = JsonConvert.SerializeObject(createProductDto);
+        StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        var responseMessage = await client.PostAsync("https://localhost:7088/api/Products", stringContent);
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Index");
+        }
+        return View();
+    }
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var client = _httpClientFactory.CreateClient();
+        var responseMessage = await client.DeleteAsync($"https://localhost:7088/api/Products/{id}");
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Index");
+        }
+        return View();
+    }
+    public async Task<IActionResult> UpdateProduct(int id)
+    {
+        var client1 = _httpClientFactory.CreateClient();
+        var responseMessage1 = await client1.GetAsync("https://localhost:7088/api/Categories");
+        var jsonData1 = await responseMessage1.Content.ReadAsStringAsync();
+        var values1 = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData1);
+        List<SelectListItem> valuesTwo = (from x in values1
+                                          select new SelectListItem
+                                          {
+                                              Text = x.CategoryName,
+                                              Value = x.CategoryId.ToString()
+                                          }).ToList();
+        ViewBag.v = valuesTwo;
+
+        var client = _httpClientFactory.CreateClient();
+        var responseMessage = await client.GetAsync($"https://localhost:7088/api/Products/{id}");
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            var jsonData = await responseMessage.Content.ReadAsStringAsync();
+            var values = JsonConvert.DeserializeObject<UpdateProductDto>(jsonData);
+            return View(values);
+        }
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
+    {
+        var client = _httpClientFactory.CreateClient();
+        var jsonData = JsonConvert.SerializeObject(updateProductDto);
+        StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        var responseMessage = await client.PutAsync("https://localhost:7088/api/Products/", stringContent);
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Index");
+        }
+        return View();
     }
 }
